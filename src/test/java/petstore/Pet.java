@@ -13,20 +13,20 @@ import static org.hamcrest.Matchers.*;
 // 3 - Classe
 public class Pet {
     //3.1 - Atributos
-    String uri = "https://petstore.swagger.io/v2/pet";  // endere√ßo da entidade Pet
+    String uri = "https://petstore.swagger.io/v2/pet";  // endereÁo da entidade Pet
 
-    //3.2 - M√©todos e Fun√ß√µes
+    //3.2 - MÈtodos e FunÁıes
     public String lerJson(String caminhoJson) throws IOException {
         return new String(Files.readAllBytes(Paths.get(caminhoJson)));
     }
 
     // Incluir - Create - Post
-    @Test // Identifica o m√©todo ou fun√ß√£o como um teste para TestNG
+    @Test (priority = 0) // Identifica o mÈtodo ou funÁ„o como um teste para TestNG
     public void incluirPet() throws IOException {
         String jsonBody = lerJson("db/pet1.json");
 
         // Sintaxe Gherkin
-        // Dado - Quando - Ent√£o
+        // Dado - Quando - Ent„o
         // Given - When - Then
 
         given() // Dado
@@ -37,13 +37,39 @@ public class Pet {
         .when()  //Quando
                 .post(uri)
 
-        .then()  //Ent√£o
+        .then()  //Ent„o
                 .log().all()
                 .statusCode(200)
                 .body("name", is("Atena"))
                 .body("status", is("available"))
-                .body("category.name", is("dog"))
-                .body("tags.name", contains("sta"));
+                .body("category.name", is("bru19940417"))
+                .body("tags.name", contains("data"));
     }
+    @Test(priority = 1)
+    public void consultarPet(){
+        String petId = "19940417";
+        String token =
+        given()
+                .contentType("aplication/json")
+                .log().all()
 
+        .when()
+                .get(uri + "/" + petId)
+
+        .then()
+                .log().all()
+                .statusCode(200)
+                .body("name", is("Atena"))
+                .body("category.name", is("bru19940417"))
+                .body("status", is ("available"))
+
+        .extract()
+                .path( "category.name");
+
+                System.out.println("o token È " + token);
+
+
+
+
+    }
 }
